@@ -13,7 +13,7 @@ const Mumbai = './CityJSON/mumbai_hotels.json';
 const CityArray = [Bangalore,Chennai,Delhi,Guwahati,Hyderabad,Kolkata,Mumbai];
 router.get("/", (req, res) => {
     console.log(req.query);
-    fs.readFile(CityArray[req.query.City], "utf8", (err, data) => {
+    fs.readFile(CityArray[parseInt(req.query.City)], "utf8", (err, data) => {
         if (err) {
             throw err;
         }
