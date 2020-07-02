@@ -1,0 +1,80 @@
+let express = require('express');
+let router = express.Router();
+let Schema = require('../database/schema');
+
+// router.get('/',function(req,res){
+//     if (req.user === undefined) {
+// 		res.redirect('/login.html');
+//     }
+//     req.user.Wishlist.forEach(id => {
+//         Schema.hotel.findOne({_id: id}, function (err, hotel) {
+//             if (err) {
+//                 return done(err);
+//             }
+//             if (hotel === null) {
+//                 res.sendStatus(404);
+//             }
+//             console.log(data)
+//         });
+//         res.send('done');
+//     })
+// });
+
+/**Route to store user Wishlist*/
+router.post('/', function(req, res) {
+    console.log('Here');
+    let wishedhotel = [];
+    req.body.wishlist.forEach(hotel => {
+        // console.log(hotel);
+        wishedhotel.push(Schema.hotel({
+            RecevID: req.user.id,
+            Name: hotel.Name,
+            Price: hotel.Price[0],
+            Address: hotel.Address[0],
+            Rating: hotel.Rating[0]
+        }));
+    });
+
+    wishedhotel.forEach(hotel => {
+        hotel.save(function (err, data) {
+            if (err) throw err;
+            Schema.user.findOne({_id: req.user.id}, function (err, user) {
+                if (err) {
+                    return done(err);
+                }
+                if (user === null) {
+                    res.sendStatus(404);
+                }
+                user.Wishlist.push(data._id);
+                user.save(function (err, data) {
+                    if (err) throw err;
+                });
+                console.log(data)
+            });
+        });
+    });
+    
+    res.send("done");
+});
+
+/**Route to Delete a notification*/
+router.delete('/', function (req,res) {
+    console.log(req.params.hotel_id);
+    Schema.hotel.findById( req.params.hotel_id, function (err, recipient) {
+        if (err)
+            return done(err);
+        Schema.user.updateOne({_id: recipient.RecevID}, { 
+            $pull: { 'Notification': req.params.notification_id } },function (err) {
+            if(err)
+                return done(err);
+            console.log('User Updated');
+            Schema.hotel.deleteOne({_id: req.params.hotel_id},function (err) {
+                if(err)
+                    return done(err);
+                res.send('Deletion done');
+            });
+        })
+    });
+});
+
+module.exports = router;

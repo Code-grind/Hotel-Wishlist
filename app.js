@@ -12,6 +12,7 @@ var usersRouter = require('./routes/users');
 var hotelRouter = require('./routes/hotelDetails');
 var LoginRouter = require('./routes/login');
 var SignupRouter = require('./routes/Signup');
+var WishlistRouter = require('./routes/wishlist');
 var app = express();
 
 // view engine setup
@@ -35,6 +36,12 @@ app.use('/users', usersRouter);
 app.use('/hotel',hotelRouter);
 app.use('/login',LoginRouter);
 app.use('/Signup',SignupRouter);
+app.use('/wishlist',WishlistRouter);
+
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/');
+});
 
 // catch 404 and forward to error handler
 // app.use(function(req, res, next) {

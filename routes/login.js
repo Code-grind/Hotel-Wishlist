@@ -6,7 +6,7 @@ router.post('/',passport.authenticate(['local.user'],{failureRedirect: '/'}),fun
   console.log('HERE ')
   console.log(req.user);
   // res.send('you are now logged in..');
-  res.redirect('/Dashboard.html');
+  res.redirect('/UserDashboard.html');
 });
 
 module.exports = router;

@@ -20,7 +20,7 @@ router.post('/', function (req, res) {
 /* GET home page. */
 router.get('/', function (req, res, next) {
 	// res.render('index', { title: 'Express' });
-	res.redirect('/adminRegister.html');
+	res.redirect('/Signup.html');
 });
 
 module.exports = router;

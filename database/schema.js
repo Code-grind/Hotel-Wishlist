@@ -10,7 +10,9 @@ let userSchema = new Schema({
 let hotelSchema = new Schema({
     RecevID: {type: Schema.Types.ObjectId, ref: 'startupSchema'},
     Name: String,
-    Price: Number
+    Price: Number,
+    Address: String,
+    Rating: String
 });
 let user = mongoose.model('Users',userSchema);
 let hotel = mongoose.model('Hotel',hotelSchema);
