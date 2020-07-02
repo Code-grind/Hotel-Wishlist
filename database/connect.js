@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-require('dotenv/config');
+// require('dotenv/config');
 ///const databaseName = 'moneygustdb';
 ///const url = 'mongodb://localhost/'+databaseName;
 ///mLab Database
