@@ -3,7 +3,8 @@ require('dotenv/config');
 ///const databaseName = 'moneygustdb';
 ///const url = 'mongodb://localhost/'+databaseName;
 ///mLab Database
-const url = process.env.MONGOURI;
+const url = 'mongodb://Admin:HotelWishlist1@ds035016.mlab.com:35016/hotel_wishlist'
+// const url = process.env.MONGOURI;
 
 function connect() {
     mongoose.connect(url,{ useNewUrlParser: true, useUnifiedTopology: true})
