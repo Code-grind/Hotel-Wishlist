@@ -2,7 +2,7 @@ let express = require('express');
 let router = express.Router();
 let Schema = require('../database/schema');
 // let bcrypt = require('bcrypt');
-require('dotenv/config');
+// require('dotenv/config');
 router.post('/', function (req, res) {
 	console.log(req.body);
 	let userSchema = Schema.user({
