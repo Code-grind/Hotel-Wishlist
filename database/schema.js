@@ -5,11 +5,17 @@ let userSchema = new Schema({
     FullName: String,
     Email: String,
     Password: String,
-    Wishlist: Array
+    Wishlist: [{type: Schema.Types.ObjectId, ref: 'hotelSchema'}]
 });
-
+let hotelSchema = new Schema({
+    RecevID: {type: Schema.Types.ObjectId, ref: 'startupSchema'},
+    Name: String,
+    Price: Number
+});
 let user = mongoose.model('Users',userSchema);
+let hotel = mongoose.model('Hotel',hotelSchema);
 
 module.exports = {
-    user
+    user,
+    hotel
 };
