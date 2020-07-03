@@ -2,23 +2,30 @@ let express = require('express');
 let router = express.Router();
 let Schema = require('../database/schema');
 
-// router.get('/',function(req,res){
-//     if (req.user === undefined) {
-// 		res.redirect('/login.html');
-//     }
-//     req.user.Wishlist.forEach(id => {
-//         Schema.hotel.findOne({_id: id}, function (err, hotel) {
-//             if (err) {
-//                 return done(err);
-//             }
-//             if (hotel === null) {
-//                 res.sendStatus(404);
-//             }
-//             console.log(data)
-//         });
-//         res.send('done');
-//     })
-// });
+router.get('/',function (req,res) {
+    if(req.user) {
+        console.log('Get Wishlist')
+        let itemsProcessed = 0;
+        let wishListHotel = [];
+        req.user.Wishlist.forEach(function (value, index, array) {
+            Schema.hotel.findOne({_id: value}).lean().exec(function (err, msg) {
+                if (err) return done(err);
+                if (msg === null) res.sendStatus(404);
+                wishListHotel.push(msg);
+                itemsProcessed++;
+                if (itemsProcessed === array.length) {
+                    AfterAllDataReceived();
+                }
+            })
+        });
+        function AfterAllDataReceived() {
+            res.send(wishListHotel);
+        }
+    }
+    else {
+        res.render('404 not found');
+    }
+});
 
 /**Route to store user Wishlist*/
 router.post('/', function(req, res) {
