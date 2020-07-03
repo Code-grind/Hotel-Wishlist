@@ -67,24 +67,25 @@ router.post('/', function (req, res) {
 /**Route to Delete a notification*/
 router.delete('/', function (req, res) {
     console.log('DELETE')
-    console.log(req.body)
-    res.send('done');
-    // Schema.hotel.findById(req.body.id, function (err, recipient) {
-    //     if (err)
-    //         return done(err);
-    //     Schema.user.updateOne({ _id: recipient.RecevID }, {
-    //         $pull: { 'Wishlist': id }
-    //     }, function (err) {
-    //         if (err)
-    //             return done(err);
-    //         console.log('User Updated');
-    //         Schema.hotel.deleteOne({ _id: id }, function (err) {
-    //             if (err)
-    //                 return done(err);
-    //             res.send('Deletion done');
-    //         });
-    //     })
-    // });
+    console.log(req.body),
+    // res.send('done');
+    Schema.hotel.findById(req.body.id, function (err, recipient) {
+        if (err)
+            return done(err);
+        Schema.user.updateOne({ _id: recipient.RecevID }, {
+            $pull: { 'Wishlist': req.body.id }
+        }, function (err) {
+            if (err)
+                return done(err);
+            console.log('User Updated');
+            Schema.hotel.deleteOne({ _id: req.body.id }, function (err) {
+                if (err)
+                    return done(err);
+                console.log('Deletion Done');
+                res.send('Deletion done');
+            });
+        })
+    });
 });
 
 module.exports = router;
