@@ -88,8 +88,9 @@
 							<h1 id="fh5co-logo"><a href="index.html">Creep Access</a></h1>
 							<nav id="fh5co-menu-wrap" role="navigation">
 								<ul class="sf-menu" id="fh5co-primary-menu">
-									<li><a class="active" href="#">Home</a></li>
-									<li><a class="active" href="/logout">Logout</a></li>
+									<li><a href="#">Home</a></li>
+									<li><a href="#" onclick="openWishList()">Open Wishlist</a></li>
+									<li><a href="/logout">Logout</a></li>
 								</ul>
 							</nav>
 						</div>
@@ -180,8 +181,26 @@
 						<div class="col-md-12">
 							<div class="section-title text-center">
 								<h2>Hotels List</h2>
-								<button class="btn btn-success" onclick="addToWishList()">Add to WishList</button>
+								<div class="row">
+									<div class="col-sm-4"></div>
+									<button class="btn btn-success col-sm-2" onclick="addToWishList()">Add to WishList</button>
+									<button class="btn btn-primary col-sm-2" onclick="openWishList()">Open WishList</button>
+								</div>
 								<ul id="hotels" class="row">
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div id="fh5co-blog-section" class="wished-list">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="section-title text-center">
+								<h2>Your Wish List</h2>
+								<ul id="wished-items" class="row">
 								</ul>
 							</div>
 						</div>
@@ -277,10 +296,18 @@
 	<script src="js/custom.js"></script>
 	<script>
 		$(".hotels-list").hide();
+		$(".wished-list").hide();
 		var wishList = [];
 		var data = [];
+		$("#sf-menu").on('click','li',function(){
+			// remove classname 'active' from all li who already has classname 'active'
+			$("#sf-menu li.active").removeClass("active");
+			// adding classname 'active' to current click li
+			$(this).addClass("active");
+		});
 		async function showHotels() {
 			var city = $('#city').find(":selected").val();
+			$(".wished-list").hide();
 			$(".hotels-list").show();
 			var url = "hotel?City=" + city;
 			let response = await fetch(url);
@@ -327,14 +354,60 @@
 					method: "POST",
 					body: JSON.stringify({ wishlist: wishList })
 				})
-				.then(function (res) { console.log(res) })
+				.then(function (res) {
+					alert("Your wish is now our responsibility!");
+					console.log(res)
+				})
 				.catch(function (res) { console.log(res) })
+		}
+		function removeWished(index) {
+			fetch("/wishlist",
+					{
+						headers: {
+							'Accept': 'application/json',
+							'Content-Type': 'application/json'
+						},
+						method: "DELETE",
+						body: JSON.stringify({ id: data[index]._id })
+					})
+					.then(function (res) {
+						console.log(res)
+						alert("Your Wish Granted!");
+						openWishList();
+					})
+					.catch(function (res) { console.log(res) })
+		}
+		async function openWishList() {
+			$(".hotels-list").hide();
+			$(".wished-list").show();
+			var url = "/wishlist" ;
+			let response = await fetch(url);
+			data = await response.json();
+			console.log(data);
+			for (i = 0; i < data.length; i++) {
+				$("#wished-items").append("<li class='thumbnail' class='col-sm-4'>\n" +
+						"<div class='caption'>\n" +
+						"<h3>Name: " + data[i].Name + "</h3>\n" +
+						"<p>Price: " + data[i].Price[0] + "</p>\n" +
+						"<p>Rating: " + data[i].Rating[0] + "</p>\n" +
+						"<p>Address: " + data[i].Address[0] + "</p>\n" +
+						"<button id='wish-" + i + "-remove' onclick='removeWished(" + i + ")' class='btn btn-danger'>Remove</button>\n" +
+						"</div>\n" +
+						"</li>");
+			}
 		}
 	</script>
 
 </body>
 <style>
 	#hotels {
+		height: 500px;
+		overflow-y: auto;
+		padding: 20px;
+		border: 1px solid grey;
+		margin: 10px;
+	}
+	#wished-items {
 		height: 500px;
 		overflow-y: auto;
 		padding: 20px;
