@@ -66,6 +66,39 @@ router.post('/', function(req, res) {
 
 /**Route to Delete a notification*/
 router.delete('/', function (req,res) {
+    console.log('Here');
+    let wishedhotel = [];
+    req.body.wishlist.forEach(hotel => {
+        // console.log(hotel);
+        wishedhotel.push(Schema.hotel({
+            RecevID: req.user.id,
+            Name: hotel.Name,
+            Price: hotel.Price[0],
+            Address: hotel.Address[0],
+            Rating: hotel.Rating[0]
+        }));
+    });
+
+    wishedhotel.forEach(hotel => {
+        hotel.save(function (err, data) {
+            if (err) throw err;
+            Schema.user.findOne({_id: req.user.id}, function (err, user) {
+                if (err) {
+                    return done(err);
+                }
+                if (user === null) {
+                    res.sendStatus(404);
+                }
+                user.Wishlist.push(data._id);
+                user.save(function (err, data) {
+                    if (err) throw err;
+                });
+                console.log(data)
+            });
+        });
+    });
+    
+    res.send("done");
     console.log(req.params.hotel_id);
     Schema.hotel.findById( req.params.hotel_id, function (err, recipient) {
         if (err)
