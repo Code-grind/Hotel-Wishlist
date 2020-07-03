@@ -312,6 +312,7 @@
 			var url = "hotel?City=" + city;
 			let response = await fetch(url);
 			data = await response.json();
+			$("#hotels").empty();
 			for (i = 0; i < data.length; i++) {
 				data[i].wished = false;
 				$("#hotels").append("<li class='thumbnail' class='col-sm-4'>\n" +
@@ -372,8 +373,8 @@
 					})
 					.then(function (res) {
 						console.log(res)
-						alert("Your Wish Granted!");
 						openWishList();
+						alert("Your Wish Granted!");
 					})
 					.catch(function (res) { console.log(res) })
 		}
@@ -384,6 +385,7 @@
 			let response = await fetch(url);
 			data = await response.json();
 			console.log(data);
+			$("#wished-items").empty();
 			for (i = 0; i < data.length; i++) {
 				$("#wished-items").append("<li class='thumbnail' class='col-sm-4'>\n" +
 						"<div class='caption'>\n" +
